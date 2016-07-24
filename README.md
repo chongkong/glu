@@ -1,7 +1,6 @@
 # Glu
-------
 
-Simple config file generation library. Glu refers to __glue__ing variables and templates.
+Simple config file generation library. Glu refers to __glue__ ing variables and templates.
 
 Sometimes config files are largely duplicated, differ a little. You can apply DRY principle for that. You might use a
 template engines like Jinja, or make a simple code for configuring. Glu is simple python library to make your config
@@ -39,13 +38,13 @@ Also you can access nested scope using `.`
 }
 
 {
-    "123": "{{counting.number}}"
+    "123": "{{counting.number}}",
     "one_two_three": "{{counting.english}}"
 }
 
 // generated
 {
-    "123": [1, 2, 3]
+    "123": [1, 2, 3],
     "one_two_three": ["one", "two", "three"]
 }
 
