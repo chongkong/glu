@@ -16,7 +16,7 @@ With Glu, you can keep your any kind of config files DRY
 You need context, or `Scope` to generate template file with variables. Glu provides `Scope` object
 so that you can load scope and inject variables using scope. Simple usage is:
 
-```
+``` python
 from glu import create_scope
 
 scope = create_scope()
@@ -35,7 +35,7 @@ scope.glue({
     'greeting': 'Hello, {{ name }}'
 })
 
-// will be
+# will be
 {
     'greeting': 'Hello, World'
 }
@@ -58,7 +58,7 @@ scope.glue({
     'one_two_three': '{{ counting.english }}'
 })
 
-// will be
+# will be
 {
     '123': [1, 2, 3],
     'one_two_three': ['one', 'two', 'three']
@@ -75,7 +75,7 @@ scope.load({
     }
 }, load_from='score', load_to='midterm_score')
 
-scope.glue('{{ midterm_score.math }}')  // will be 93
+scope.glue('{{ midterm_score.math }}')  # will be 93
 
 ```
 
@@ -88,7 +88,7 @@ scope.load({
     }
 })
 
-scope.glue('{{ score.science ?? score.history ?? score.math }}')  // will be 93
+scope.glue('{{ score.science ?? score.history ?? score.math }}')  # will be 93
 ```
 
 You can apply some filters
@@ -109,7 +109,7 @@ scope.glue({
     'capitalize_dash': '{{ foo | capitalize_dash }}',
 })
 
-// will be
+# will be
 {
     'display': 'This Is Really Amazing',
     'camel_case': 'thisIsReallyAmazing',
@@ -138,7 +138,7 @@ scope.glue({
     'coz': '{{ undefined_var | mute }}'
 })
 
-// will be an empty dict
+# will be an empty dict
 {}
 ```
 
@@ -164,7 +164,7 @@ scope.glue({
     'hello_bar': '{{ greeting < bar_scope }}'
 })
 
-// will be
+# will be
 {
     'hello_foo': 'hello, foo',
     'hello_bar': 'hello, bar'
