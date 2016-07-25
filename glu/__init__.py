@@ -1,1 +1,1 @@
-from glu.core import reset_scope, load_scope, glued
+from glu.core import create_scope
