@@ -38,14 +38,13 @@ def tokenize(string):
     return re.compile('[\s_-]+').split(string)
 
 
-@string_filter
-def display(string):
-    return ' '.join(token[0].upper() + token[1:] for token in tokenize(string))
-
-
-@string_filter
 def capitalize(string):
     return string[0].upper() + string[1:].lower()
+
+
+@string_filter
+def display(string):
+    return ' '.join(capitalize(token) for token in tokenize(string))
 
 
 @string_filter
