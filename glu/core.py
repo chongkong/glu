@@ -80,9 +80,8 @@ class Scope(object):
             return [self.glue(item) for item in value
                     if item is not muted]
         if isinstance(value, dict):
-            return type(value)([
-                                   kv for kv in [(k, self.glue(v)) for k, v in value.items()]
-                                   if kv[1] is not muted])
+            return type(value)([kv for kv in [(k, self.glue(v)) for k, v in value.items()]
+                                if kv[1] is not muted])
         if isinstance(value, str):
             match = re.match('^{{([^{}]+)}}$', value)
             if match is not None:
