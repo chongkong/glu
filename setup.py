@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='glu',
     packages=find_packages(),
-    version='0.0.3',
+    version='0.0.4',
     description='Glue for DRY configurations',
     author='Park Jong Bin',
     author_email='chongkong94@gmail.com',
