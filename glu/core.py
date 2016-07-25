@@ -10,7 +10,7 @@ class Scope(object):
     def __init__(self):
         self.scope = {}
 
-    def reset(self, *init, set_basic=True):
+    def reset(self, init, set_basic=True):
         self.scope.clear()
         if set_basic:
             self.scope['@date'] = datetime.today().strftime('%Y%m%d')
@@ -91,7 +91,7 @@ class Scope(object):
         return value
 
 
-def create_scope(*init, set_basic=True):
+def create_scope(init, set_basic=True):
     scope = Scope()
-    scope.reset(*init, set_basic=set_basic)
+    scope.reset(init, set_basic=set_basic)
     return scope
