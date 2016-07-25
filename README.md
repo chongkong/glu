@@ -11,6 +11,14 @@ And Glu appeared from lack and the need of configuration-optimized template engi
 template syntax that is similar to Jinja, but provides much robust syntax for configuration hierarchy.
 With Glu, you can keep your any kind of config files DRY
 
+## How to install?
+
+You need python 3.5 to use Glu
+
+```
+pip install glu
+```
+
 ## Quick Start
 
 You need context, or `Scope` to generate template file with variables. Glu provides `Scope` object
