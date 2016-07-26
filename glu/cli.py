@@ -55,4 +55,5 @@ def main():
     logging.info('Result:\n{}'.format(json.dumps(res, indent=2)))
 
     with open(args.output, 'w') as f:
-        json.dump(res, f, separators=(',\n', ': '))
+        json.dump(res, f, indent=2, separators=(',', ': '))
+        f.write('\n')
