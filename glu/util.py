@@ -21,6 +21,12 @@ def head_tail(iterable):
     return lst[0], lst[1:]
 
 
+def tail_head(iterable):
+    """ For python2 compatibility """
+    lst = list(iterable)
+    return lst[:-1], lst[-1]
+
+
 def get_dot(dic, key, default=None):
     """ Similar to dict.get(), but key is given with dot (eg. foo.bar) and
     result is evaluated in generous way. That is, get_dot(dic, 'foo.bar.vaz')
@@ -42,7 +48,7 @@ def get_dot(dic, key, default=None):
 def set_dot_default(dic, key, value):
     """ Similar to dict.set_default(), but key is given with dot (eg. foo.bar)
     Refer docs of get_dot() for more detail. """
-    *keys, last_key = key.split('.')
+    keys, last_key = tail_head(key.split('.'))
     res = dic
     for k in keys:
         if not isinstance(res, dict):
