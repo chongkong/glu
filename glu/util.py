@@ -1,3 +1,18 @@
+import yaml
+from collections import OrderedDict
+
+
+class OrderedDictYamlLoader(yaml.Loader):
+    pass
+
+
+def construct_mapping(loader, node):
+    loader.flatten_mapping(node)
+    return OrderedDict(loader.construct_pairs(node))
+
+OrderedDictYamlLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+    construct_mapping)
 
 
 def get_dot(dic, key, default=None):

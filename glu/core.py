@@ -10,15 +10,13 @@ class Scope(object):
     def __init__(self):
         self.scope = {}
 
-    def reset(self, init, set_basic=True):
+    def reset(self, set_basic=True):
         self.scope.clear()
         if set_basic:
             self.scope['@date'] = datetime.today().strftime('%Y%m%d')
             self.scope['@timestamp'] = int(time.time())
             for i in range(10):
                 self.scope['@uuid_{}'.format(i)] = str(uuid.uuid4())
-        for scope in init:
-            self.scope.update(scope)
 
     def load(self, scope, load_from=None, load_to=None):
         scope = scope if load_from is None \
@@ -90,7 +88,7 @@ class Scope(object):
         return value
 
 
-def create_scope(init, set_basic=True):
+def create_scope(set_basic=True):
     scope = Scope()
-    scope.reset(init, set_basic=set_basic)
+    scope.reset(set_basic=set_basic)
     return scope
