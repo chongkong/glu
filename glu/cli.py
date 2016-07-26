@@ -36,8 +36,6 @@ def parse():
     parser.add_argument('-e', '--use-env', action='store_true', help='Use environment variable')
     parser.add_argument('-t', '--target', required=True, help='Path to the target file')
     parser.add_argument('-o', '--output', required=True, help='Path for output file')
-    parser.add_argument('-f', '--output-format', choices=['json', 'yaml'], default='json', help='Format of output file')
-
     return parser.parse_args()
 
 
@@ -56,6 +54,5 @@ def main():
 
     logging.info('Result:\n{}'.format(json.dumps(res, indent=2)))
 
-    encoder = json if args.output_format == 'json' else yaml
     with open(args.output, 'w') as f:
-        encoder.dump(res, f, indent=2)
+        json.dump(res, f, separators=(',\n', ': '))
