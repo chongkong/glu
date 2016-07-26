@@ -1,5 +1,6 @@
 import re
 from functools import wraps
+from glu.util import head_tail
 
 undefined = object()
 muted = object()
@@ -102,7 +103,7 @@ def mute_if_empty(variable):
 
 def apply_filters(item, *exprs):
     for expr in exprs:
-        key, *args = expr.split()
+        key, args = head_tail(expr.split())
         assert key in filters, 'Unknown filter {}'.format(key)
         item = filters[key](item, *args)
 
