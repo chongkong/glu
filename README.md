@@ -13,7 +13,7 @@ With Glu, you can keep your any kind of config files DRY
 
 ## How to install?
 
-You need python 3.5 to use Glu
+Support any python version. If you are having an compatibility issue, please let me know.
 
 ```
 pip install glu
