@@ -96,6 +96,8 @@ def mute_if_undefined(variable):
 
 @mute_filter
 def mute_if_empty(variable):
+    if variable is undefined:
+        return True
     if hasattr(variable, '__len__'):
         return len(variable) == 0
     return False
