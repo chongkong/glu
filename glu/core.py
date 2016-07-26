@@ -35,9 +35,9 @@ class Scope(object):
     def override(self, *scope_keys):
         scope = self.copy()
         for s in scope_keys:
-            if s not in scope.scope:
+            if get_dot(scope, s) is None:
                 raise KeyError('Undefined scope key: {}'.format(s))
-            scope.load(scope.scope[s])
+            scope.load(get_dot(scope, s))
         return scope
 
     def resolve(self, key):
