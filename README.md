@@ -179,6 +179,14 @@ scope.glue({
 }
 ```
 
+Following basic variables are registered as default. You can disable registration of basic variables
+by calling `create_scope(set_basic=False)`
+
+| Variable Name | Value |
+| ----- | ----- |
+| @date | date string of format `yyyymmdd` |
+| @timestamp | int value of unix timestamp |
+| @uuid_x | randomly issued UUID string. There are total 10 random uuid: `@uuid_0` to `@uuid_9` |
 
 ## Command Line Interface
 
