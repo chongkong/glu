@@ -5,14 +5,14 @@ setup(
     packages=find_packages(),
     url='https://github.com/chongkong/glu',
     license='MIT',
-    version='0.0.6',
+    version='0.0.7',
     description='Glue for DRY configurations',
     author='Park Jong Bin',
     author_email='chongkong94@gmail.com',
     keywords=['glue', 'glu', 'dry', 'config', 'dry-config', 'dry-configurable'],
     zip_safe=False,
     install_requires=[
-        'requests==2.10.0',
+        'future==0.15.2',
         'PyYAML==3.11'
     ],
     entry_points={
@@ -22,7 +22,8 @@ setup(
     },
     classifiers=[
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License'

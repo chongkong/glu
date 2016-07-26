@@ -15,7 +15,18 @@ OrderedDictYamlLoader.add_constructor(
     construct_mapping)
 
 
+def head_tail(iterable):
+    """ For python2 compatibility """
+    lst = list(iterable)
+    return lst[0], lst[1:]
+
+
 def get_dot(dic, key, default=None):
+    """ Similar to dict.get(), but key is given with dot (eg. foo.bar) and
+    result is evaluated in generous way. That is, get_dot(dic, 'foo.bar.vaz')
+    will return dic['foo']['bar'] if both dic['foo'] and dic['foo']['baz'] exists,
+    but return default if any of them does not exists.
+    """
     keys = key.split('.')
     res = dic
     for k in keys:
@@ -29,6 +40,8 @@ def get_dot(dic, key, default=None):
 
 
 def set_dot_default(dic, key, value):
+    """ Similar to dict.set_default(), but key is given with dot (eg. foo.bar)
+    Refer docs of get_dot() for more detail. """
     *keys, last_key = key.split('.')
     res = dic
     for k in keys:

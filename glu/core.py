@@ -1,7 +1,9 @@
 import re
 import uuid
 from datetime import datetime
-from glu.util import get_dot, set_dot_default
+from future.utils import iteritems
+from past.types import basestring
+from glu.util import head_tail, get_dot, set_dot_default
 from glu.filter import apply_filters, undefined, muted
 import time
 
@@ -45,12 +47,12 @@ class Scope(object):
         return self.glue(res)
 
     def evaluate(self, expr):
-        statement, *filters = (x.strip() for x in expr.split('|'))
+        statement, filters = head_tail(x.strip() for x in expr.split('|'))
         clauses = [x.strip() for x in statement.split('??')]
 
         res = undefined
         for clause in clauses:
-            key, *scopes = [x.strip() for x in clause.split('<')]
+            key, scopes = head_tail(x.strip() for x in clause.split('<'))
             res = (self if len(scopes) == 0
                    else self.override(*scopes)).resolve(key)
             if res is not undefined:
@@ -67,7 +69,7 @@ class Scope(object):
         for template in re.findall('{{[^{}]+?}}', pattern):
             expr = template[2:-2].strip()
             res = self.evaluate(expr)
-            assert isinstance(res, (int, str)), (
+            assert isinstance(res, (int, basestring)), (
                 'Cannot interpolate {} (={});'
                 ' Only int or str value is allowed').format(template, res)
             rendered = rendered.replace(template, str(res))
@@ -78,9 +80,9 @@ class Scope(object):
             return [self.glue(item) for item in value
                     if item is not muted]
         if isinstance(value, dict):
-            return type(value)([kv for kv in [(k, self.glue(v)) for k, v in value.items()]
+            return type(value)([kv for kv in [(k, self.glue(v)) for k, v in iteritems(value)]
                                 if kv[1] is not muted])
-        if isinstance(value, str):
+        if isinstance(value, basestring):
             match = re.match('^{{([^{}]+)}}$', value)
             if match is not None:
                 return self.evaluate(match.group(1))
