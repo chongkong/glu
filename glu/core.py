@@ -53,8 +53,11 @@ class Scope(object):
         res = undefined
         for clause in clauses:
             key, scopes = head_tail(x.strip() for x in clause.split('<'))
-            res = (self if len(scopes) == 0
-                   else self.override(*scopes)).resolve(key)
+            if len(scopes) > 0:
+                scopes = [x.strip() for x in scopes.split()]
+                res = self.override(*scopes).resolve(key)
+            else:
+                res = self.resolve(key)
             if res is not undefined:
                 break
 
