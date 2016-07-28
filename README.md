@@ -48,7 +48,7 @@ $ glu -s /path/to/source_file.json\
 Rules for gluing is basically substitution. Variable from source file
 is registered as a ***global*** scope, and can be used in any places.
 
-``` json
+``` python
 # source
 {
   "name": "¯\_(ツ)_/¯"
@@ -226,6 +226,28 @@ Inject operator enables you to function-like or class-like behavior.
     { "full_name": "Aiden Park" }
   ]
 }
+```
+
+You can use multiple operators on single expression, but its evaluation
+order can change any time, be careful to use so.
+
+``` python
+# This is possible
+{
+  "example": "{{ foo ?? bar < bar_scope ?? zec < zec_scope | snake_case | mute }}"
+}
+```
+
+Above example will be evaluated as:
+
+``` python
+# This is psuedo code
+filter(mute, 
+  filter(snake_case,
+    fallback(foo,
+      fallback(
+        inject(bar, bar_scope),
+        inject(zec, zec_scope)))))
 ```
 
 ### Predefined variables
