@@ -49,19 +49,19 @@ Rules for gluing is basically substitution. Variable from source file
 is registered as a ***global*** scope, and can be used in any places.
 
 ``` json
-// source
+# source
 {
-  "name": "¯\_(ツ)_/¯"
+  "name": "¯\\_(ツ)_/¯"
 }
 
-// template
+# template
 {
   "greeting": "Hello, {{ name }}"
 }
 
-// generated
+# generated
 {
-  "greeting": "Hello, ¯\_(ツ)_/¯"
+  "greeting": "Hello, ¯\\_(ツ)_/¯"
 }
 ```
 
@@ -77,16 +77,16 @@ use `.` for nested access. Dot (`.`) is evaluated generously, that is if
 reference exception. Dot will be used very frequently in your JSON code.
 
 ``` json
-// scope
+# scope
 {
-  "array": [1, 2, 3]
+  "array": [1, 2, 3],
   "dictionary": {
-    "foo": "¯\_(ツ)_/¯",
+    "foo": "¯\\_(ツ)_/¯",
     "bar": "{{ array }}"
   }
 }
 
-// template
+# template
 {
   "result": [
     "{{ dictionary }}",
@@ -94,11 +94,11 @@ reference exception. Dot will be used very frequently in your JSON code.
   ]
 }
 
-// generated
+# generated
 {
   "result": [
     {
-      "foo": "¯\_(ツ)_/¯",
+      "foo": "¯\\_(ツ)_/¯",
       "bar": [1, 2, 3]
     },
     [1, 2, 3]
@@ -117,17 +117,17 @@ variable is ***undefined***. if evaluated value is ***undefined***, Glu
 will raise error.
 
 ``` python
-// source
+# source
 {
   "score": { "math": 93 }
 )
 
-// template
+# template
 {
   "score": "{{ score.science ?? score.history ?? score.math }}"
 }
 
-// generated
+# generated
 {
   "score": 93
 }
@@ -137,12 +137,12 @@ Filter operator looks like `|`, which will apply filter in rhs to value
 in lhs. Let's first look at the string filters.
 
 ``` json
-// source
+# source
 {
   "foo": "This_isREALLYAmazing"
 }
 
-// template
+# template
 {
   "display": "{{ foo | display }}",
   "camel_case": "{{ foo | camel_case }}",
@@ -171,15 +171,15 @@ There is `mute` filter, which removes ***undefined*** fields from
 dictionary or array. `mute_if_empty` field behaves the same, but removes
 empty field
 
-``` json
-// source
+``` python
+# source
 {
-    empty_array": [],
+    "empty_array": [],
     "empty_string": "",
     "empty_dict": {}
 }
 
-// template
+# template
 {
     "foo": "{{ empty_array | mute_if_empty }}",
     "bar": "{{ empty_string | mute_if_empty }}",
@@ -187,7 +187,7 @@ empty field
     "coz": "{{ undefined_variable | mute }}"
 }
 
-// generated
+# generated
 {}
 ```
 
@@ -196,7 +196,7 @@ variable, which will temporally override the ***global scope***.
 Inject operator enables you to function-like or class-like behavior.
 
 ``` python
-// source
+# source
 {
   "Person": {
     "full_name": "{{ first_name }} {{ last_name }}"
@@ -211,7 +211,7 @@ Inject operator enables you to function-like or class-like behavior.
   }
 }
 
-// template
+# template
 {
   "people": [
     "{{ Person < joe }}",
@@ -219,7 +219,7 @@ Inject operator enables you to function-like or class-like behavior.
   ]
 }
 
-// generated
+# generated
 {
   "people": [
     { "full_name": "Alan Joe" },
