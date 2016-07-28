@@ -51,7 +51,7 @@ is registered as a ***global*** scope, and can be used in any places.
 ``` json
 # source
 {
-  "name": "¯\\_(ツ)_/¯"
+  "name": "¯\_(ツ)_/¯"
 }
 
 # template
@@ -61,7 +61,7 @@ is registered as a ***global*** scope, and can be used in any places.
 
 # generated
 {
-  "greeting": "Hello, ¯\\_(ツ)_/¯"
+  "greeting": "Hello, ¯\_(ツ)_/¯"
 }
 ```
 
@@ -76,12 +76,12 @@ use `.` for nested access. Dot (`.`) is evaluated generously, that is if
 ***undefined*** or `foo.bar` is ***undefined***, without throwing null
 reference exception. Dot will be used very frequently in your JSON code.
 
-``` json
+``` python
 # scope
 {
   "array": [1, 2, 3],
   "dictionary": {
-    "foo": "¯\\_(ツ)_/¯",
+    "foo": "¯\_(ツ)_/¯",
     "bar": "{{ array }}"
   }
 }
@@ -98,7 +98,7 @@ reference exception. Dot will be used very frequently in your JSON code.
 {
   "result": [
     {
-      "foo": "¯\\_(ツ)_/¯",
+      "foo": "¯\_(ツ)_/¯",
       "bar": [1, 2, 3]
     },
     [1, 2, 3]
@@ -136,7 +136,7 @@ will raise error.
 Filter operator looks like `|`, which will apply filter in rhs to value
 in lhs. Let's first look at the string filters.
 
-``` json
+``` python
 # source
 {
   "foo": "This_isREALLYAmazing"
