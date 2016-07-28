@@ -32,9 +32,9 @@ def load_scope_from_file(scope, file_uri):
 
 def parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--load-scope', required=True, dest='scopes', nargs='+', help='Path to the scope file')
+    parser.add_argument('-s', '--source', required=True, dest='sources', nargs='+', help='Path to the source file')
     parser.add_argument('-e', '--use-env', action='store_true', help='Use environment variable')
-    parser.add_argument('-t', '--target', required=True, help='Path to the target file')
+    parser.add_argument('-t', '--template', required=True, help='Path to the template file')
     parser.add_argument('-o', '--output', required=True, help='Path for output file')
     return parser.parse_args()
 
@@ -44,13 +44,13 @@ def main():
     scope = create_scope()
 
     if args.use_env:
-        scope.load(dict(os.environ.items()))
+        scope.load(dict(os.environ.items()), load_to='@env')
 
-    for file_uri in args.scopes:
+    for file_uri in args.sources:
         load_scope_from_file(scope, file_uri)
 
-    target = load_file(args.target)
-    res = scope.glue(target)
+    template = load_file(args.template)
+    res = scope.glue(template)
 
     logging.info('Result:\n{}'.format(json.dumps(res, indent=2)))
 

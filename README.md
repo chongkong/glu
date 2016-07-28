@@ -1,223 +1,244 @@
 # Glu
 
-Simple config file generation library. Glu refers to *glue*ing variables and templates.
+Glu is a simple config file generation command line tool. Glu refers to 
+*glue*ing variable scopes to template, using only JSON or YAML file. 
+This makes your configuration configurable as much DRY as you can.
 
-Glu is simple python library to make your config configurable. Sometimes config files are largely 
-duplicated, differ a little. You can apply DRY principle for that. You might use a template engines
-like Jinja, or make a simple code for configuring. But Jinja template is not optimized for configuration,
-and writing extra code makes you tired.
- 
-And Glu appeared from lack and the need of configuration-optimized template engine. Glu uses
-template syntax that is similar to Jinja, but provides much robust syntax for configuration hierarchy.
-With Glu, you can keep your any kind of config files DRY
+Its syntax is similar to those of other template engines, like Jinja,
+but it is more like a programming using JSON or YAML. Glu provides much
+robust syntax for generating configuration, and highly optimized for
+only generating configurations.
 
 ## How to install?
 
-Support any python version. If you are having an compatibility issue, please let me know.
+Support any python version. If you are having an compatibility issue,
+please let me know.
 
 ```
-pip install glu
+$ pip install glu
 ```
+
+If you want to install it globally, add `sudo` in front of the command.
 
 ## Quick Start
 
-You need context, or `Scope` to generate template file with variables. Glu provides `Scope` object
-so that you can load scope and inject variables using scope. Simple usage is:
+You need to provide ***source*** files, which would be used as a variable
+scope, and a ***template*** file, to which variables of scope will be
+injected, or _glued_.
 
-``` python
-from glu import create_scope
+If your source files and template file is ready, just run:
 
-scope = create_scope()
-scope.load({ 'greeting': 'Hello, Glu!' })
-print(scope.glue('{{ greeting }}'))  # will print 'Hello, Glu!'
+
+``` shell
+$ glu -s source_file [source_file...] -t template_file -o output_file [-e]
 ```
 
-It's syntax similar to other template engines like jinja.
+For example,
 
-``` python
-scope.load({
-    'name': 'World'
-})
+``` shell
+$ glu -s /path/to/source_file.json\
+         /path/to/yaml_source_file.yml\ 
+      -t /path/to/template_file.json\
+      -o /path/to/output_file.json\
+      -e  # if you want to use environment variable
+```
 
-scope.glue({
-    'greeting': 'Hello, {{ name }}'
-})
+### Grammar Basics
 
-# will be
+Rules for gluing is basically substitution. Variable from source file
+is registered as a ***global*** scope, and can be used in any places.
+
+``` json
+// source
 {
-    'greeting': 'Hello, World'
+  "name": "¯\_(ツ)_/¯"
+}
+
+// template
+{
+  "greeting": "Hello, {{ name }}"
+}
+
+// generated
+{
+  "greeting": "Hello, ¯\_(ツ)_/¯"
 }
 ```
 
-If template expression is used solely (not interpolated), its value is inserted, whatever value type is.
-Also you can access nested scope using `.`
+You can substitute variables of arbitrary type, and if variable is
+within the string, it will be interpolated like above. But be careful 
+not to use non-string variable within the string, because it cannot be
+interpolated properly. (integer is OK)
 
-``` python
+If you want to access variable in another dictionary variable, you can
+use `.` for nested access. Dot (`.`) is evaluated generously, that is if 
+`foo.bar` will be evaluated to ***undefined*** if `foo` is 
+***undefined*** or `foo.bar` is ***undefined***, without throwing null
+reference exception. Dot will be used very frequently in your JSON code.
 
-scope.load({
-    'counting': {
-        'number': [1, 2, 3],
-        'english': ['one', 'two', 'three']
-    }
-})
-
-scope.glue({
-    '123': '{{ counting.number }}',
-    'one_two_three': '{{ counting.english }}'
-})
-
-# will be
+``` json
+// scope
 {
-    '123': [1, 2, 3],
-    'one_two_three': ['one', 'two', 'three']
+  "array": [1, 2, 3]
+  "dictionary": {
+    "foo": "¯\_(ツ)_/¯",
+    "bar": "{{ array }}"
+  }
 }
 
-```
-
-You can also specify loading point using `load_from` and `load_to` keyword argument
-
-``` python
-scope.load({
-    'score': {
-        'math': 93
-    }
-}, load_from='score', load_to='midterm_score')
-
-scope.glue('{{ midterm_score.math }}')  # will be 93
-
-```
-
-You can specify fallback value using `??`, which will be used when former variable is undefined
-
-``` python
-scope.load({
-    'score': {
-        'math': 93
-    }
-})
-
-scope.glue('{{ score.science ?? score.history ?? score.math }}')  # will be 93
-```
-
-You can apply some filters
-
-``` python
-scope.load({
-    'foo': 'This_isREALLYAmazing'
-})
-
-scope.glue({
-    'display': '{{ foo | display }}',
-    'camel_case': '{{ foo | camel_case }}',
-    'pascal_case': '{{ foo | pascal_case }}',
-    'snake_case': '{{ foo | snake_case }}',
-    'lisp_case': '{{ foo | lisp_case }}',
-    'uppercase': '{{ foo | uppercase }}',
-    'uppercase_dash': '{{ foo | uppercase_dash }}',
-    'capitalize_dash': '{{ foo | capitalize_dash }}',
-})
-
-# will be
+// template
 {
-    'display': 'This Is Really Amazing',
-    'camel_case': 'thisIsReallyAmazing',
-    'pascal_case': 'ThisIsReallyAmazing',
-    'snake_case': 'this_is_really_amazing',
-    'lisp_case': 'this-is-really-amazing',
-    'uppercase': 'THIS_IS_REALLY_AMAZING',
-    'uppercase_dash': 'THIS-IS-REALLY-AMAZING',
-    'capitalize_dash': 'This-Is-Really-Amazing',
+  "result": [
+    "{{ dictionary }}",
+    "{{ dictionary.bar }}"
+  ]
+}
+
+// generated
+{
+  "result": [
+    {
+      "foo": "¯\_(ツ)_/¯",
+      "bar": [1, 2, 3]
+    },
+    [1, 2, 3]
+  ]
 }
 ```
 
-You can omit the undefined field by using `mute`, or `mute_if_empty` filter
+### Operators
+
+There are some operators that makes Glu robust. Operator interface is
+not stable yet, so keep in mind this operator might be changed in future,
+which you have to update them manually `¯\_(ツ)_/¯`
+
+Fallback operator looks like `??`, which uses next variable if former
+variable is ***undefined***. if evaluated value is ***undefined***, Glu
+will raise error.
 
 ``` python
-scope.load({
-    'empty_array': [],
-    'empty_string': '',
-    'empty_dict': {}
-})
+// source
+{
+  "score": { "math": 93 }
+)
 
-scope.glue({
-    'foo': '{{ empty_array | mute_if_empty }}',
-    'bar': '{{ empty_string | mute_if_empty }}',
-    'zoo': '{{ empty_dict | mute_if_empty }}',
-    'coz': '{{ undefined_var | mute }}'
-})
+// template
+{
+  "score": "{{ score.science ?? score.history ?? score.math }}"
+}
 
-# will be an empty dict
+// generated
+{
+  "score": 93
+}
+```
+
+Filter operator looks like `|`, which will apply filter in rhs to value
+in lhs. Let's first look at the string filters.
+
+``` json
+// source
+{
+  "foo": "This_isREALLYAmazing"
+}
+
+// template
+{
+  "display": "{{ foo | display }}",
+  "camel_case": "{{ foo | camel_case }}",
+  "pascal_case": "{{ foo | pascal_case }}",
+  "snake_case": "{{ foo | snake_case }}",
+  "lisp_case": "{{ foo | lisp_case }}",
+  "uppercase": "{{ foo | uppercase }}",
+  "uppercase_dash": "{{ foo | uppercase_dash }}",
+  "capitalize_dash": "{{ foo | capitalize_dash }}",
+}
+
+# will be
+{
+    "display": "This Is Really Amazing",
+    "camel_case": "thisIsReallyAmazing",
+    "pascal_case": "ThisIsReallyAmazing",
+    "snake_case": "this_is_really_amazing",
+    "lisp_case": "this-is-really-amazing",
+    "uppercase": "THIS_IS_REALLY_AMAZING",
+    "uppercase_dash": "THIS-IS-REALLY-AMAZING",
+    "capitalize_dash": "This-Is-Really-Amazing",
+}
+```
+
+There is `mute` filter, which removes ***undefined*** fields from
+dictionary or array. `mute_if_empty` field behaves the same, but removes
+empty field
+
+``` json
+// source
+{
+    empty_array": [],
+    "empty_string": "",
+    "empty_dict": {}
+}
+
+// template
+{
+    "foo": "{{ empty_array | mute_if_empty }}",
+    "bar": "{{ empty_string | mute_if_empty }}",
+    "zoo": "{{ empty_dict | mute_if_empty }}",
+    "coz": "{{ undefined_variable | mute }}"
+}
+
+// generated
 {}
 ```
 
-And last, you can insert temporal scope for resolving expression, which enables to
-use template as a function. This scope injection is the key feature of Glu.
+Inject operator (`<`) let you inject the ***local scope*** when gluing 
+variable, which will temporally override the ***global scope***.
+Inject operator enables you to function-like or class-like behavior.
 
 ``` python
-scope.load({
-    'greeting': 'hello, {{ name }}'
-})
-
-scope.load({
-    'foo_scope': {
-        'name': 'foo'
-    },
-    'bar_scope': {
-        'name': 'bar'
-    }
-})
-
-scope.glue({
-    'hello_foo': '{{ greeting < foo_scope }}',
-    'hello_bar': '{{ greeting < bar_scope }}'
-})
-
-# will be
+// source
 {
-    'hello_foo': 'hello, foo',
-    'hello_bar': 'hello, bar'
+  "Person": {
+    "full_name": "{{ first_name }} {{ last_name }}"
+  },
+  "joe": {
+    "first_name": "Alan",
+    "last_name": "Joe"
+  },
+  "park": {
+    "first_name": "Aiden",
+    "last_name": "Park"
+  }
+}
+
+// template
+{
+  "people": [
+    "{{ Person < joe }}",
+    "{{ Person < park }}"
+  ]
+}
+
+// generated
+{
+  "people": [
+    { "full_name": "Alan Joe" },
+    { "full_name": "Aiden Park" }
+  ]
 }
 ```
 
-Following basic variables are registered as default. You can disable registration of basic variables
-by calling `create_scope(set_basic=False)`
+### Predefined variables
+
+Glu supports some variables which is useful when generating
+configurations.
 
 | Variable Name | Value |
 | ----- | ----- |
-| @date | date string of format `yyyymmdd` |
-| @timestamp | int value of unix timestamp |
-| @uuid_x | randomly issued UUID string. There are total 10 random uuid: `@uuid_0` to `@uuid_9` |
+| @date | Date string of format `yyyymmdd` |
+| @timestamp | Integer value of unix timestamp |
+| @uuid_x | Randomly issued UUID string. There are total 10 random uuid: `@uuid_0` to `@uuid_9` |
+| @env | Place where environment variable is stored, if `--use-env` option is set |
 
-## Command Line Interface
-
-Once you've installed Glu via pip, you can use simple command line interface that Glu provides.
-It supports only one syntax:
-
-``` shell
-$ glu --load-scope scope_file [scope_file...] --target target_file --output output_file [--use-env]
-```
-
-Or simply, 
-
-```
-$ glu -s scope_file [scope_files...] -t target_file -o output_file [-e]
-```
- 
-
-| Argument | Description | Type |
-| ----- | ----- | ----- | ----- |
-| _scope_file_ | List of path to json or yaml files, which will be loaded by `scope.load()` | Path |
-| _target_file_ | Path to json or yaml file to be glued via `scope.glue()` | Path |
-| _output_file_ | Path to json or yaml file that is generated by `scope.glue()` | Path |
-| _--use-env_ | whether to load environment variable into scope |  |
-
-Since you can add `load_from` and `load_to` parameters to `scope.load()`, You can also use such 
-parameters in _scope_file_ by querystring. Let's look at the example:
-
-``` shell
-$ glu -s /path/to/file.json?load_from=foo.bar&load_to=baz\
-         /path/to/yaml_file.yml?load_to=foo 
-      -t /path/to/target_file.json
-      -o /path/to/output_file.json
-      --use-env
-```
+Variables start with `@` are all reserved, so please do not start your
+variable name with `@`.
