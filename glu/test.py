@@ -99,6 +99,15 @@ class CoreTest(unittest.TestCase):
                 'coz': '{{ undefined_var | mute }}'
             }), {})
 
+    def test_mute_array(self):
+        res = self.scope.glue([
+            '{{ undefined_var | mute }}'
+        ])
+        self.assertEqual(
+            self.scope.glue([
+                '{{ undefined_var | mute }}'
+            ]), [])
+
     def test_scope(self):
         self.scope.load({
             'greeting': 'hello, {{ name }}'

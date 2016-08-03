@@ -77,8 +77,8 @@ class Scope(object):
 
     def glue(self, value):
         if isinstance(value, list):
-            return [self.glue(item) for item in value
-                    if item is not muted]
+            glued = [self.glue(item) for item in value]
+            return [item for item in glued if item is not muted]
         if isinstance(value, dict):
             return type(value)([kv for kv in [(k, self.glue(v)) for k, v in iteritems(value)]
                                 if kv[1] is not muted])

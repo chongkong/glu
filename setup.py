@@ -5,7 +5,7 @@ setup(
     packages=find_packages(),
     url='https://github.com/chongkong/glu',
     license='MIT',
-    version='0.0.17',
+    version='0.0.18',
     description='Glue for DRY configurations',
     author='Park Jong Bin',
     author_email='chongkong94@gmail.com',
