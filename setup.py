@@ -12,8 +12,8 @@ setup(
     keywords=['glue', 'glu', 'dry', 'config', 'dry-config', 'dry-configurable'],
     zip_safe=False,
     install_requires=[
-        'future==0.15.2',
-        'PyYAML==3.11'
+        'future',
+        'PyYAML'
     ],
     entry_points={
         'console_scripts': [
