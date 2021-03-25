@@ -13,7 +13,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'future==0.15.2',
-        'PyYAML==3.11'
+        'PyYAML==5.4'
     ],
     entry_points={
         'console_scripts': [
